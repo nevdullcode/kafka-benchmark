@@ -29,6 +29,8 @@ pub struct Scenario {
     #[serde(default = "zero")]
     pub repeat_pause: usize,
     #[serde(default = "one")]
+    pub topic_partitions: usize,
+    #[serde(default = "one")]
     pub threads: usize,
     #[serde(default)]
     pub producer: ProducerType,
