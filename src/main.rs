@@ -69,7 +69,7 @@ fn base_producer_thread(thread_id: usize, scenario: &Scenario, cache: &CachedMes
     let start = Instant::now();
     for (count, content) in cache.into_iter().take(per_thread_messages).enumerate() {
         loop {
-            match producer.send_copy::<[u8], [u8]>(&scenario.topic, Some(count % scenario.topic_partitions), Some(content), None, (), None) {
+            match producer.send_copy::<[u8], [u8]>(&scenario.topic, Some(count as i32 % scenario.topic_partitions as i32), Some(content), None, (), None) {
                 Err(KafkaError::MessageProduction(RDKafkaError::QueueFull)) => {
                     producer.poll(10);
                     continue;
@@ -118,7 +118,7 @@ fn future_producer_thread(thread_id: usize, scenario: &Scenario, cache: &CachedM
     let mut failures = 0;
     let mut futures = Vec::with_capacity(1_000_000);
     for (count, content) in cache.into_iter().take(per_thread_messages).enumerate() {
-        futures.push(producer.send_copy::<[u8], [u8]>(&scenario.topic, Some(count % scenario.topic_partitions), Some(content), None, None, -1));
+        futures.push(producer.send_copy::<[u8], [u8]>(&scenario.topic, Some(count as i32 % scenario.topic_partitions as i32), Some(content), None, None, -1));
         if futures.len() >= 1_000_000 {
             failures += wait_all(futures);
             futures = Vec::with_capacity(1_000_000);
