@@ -69,7 +69,7 @@ fn base_producer_thread(thread_id: usize, scenario: &Scenario, cache: &CachedMes
     let start = Instant::now();
     for (count, content) in cache.into_iter().take(per_thread_messages).enumerate() {
         loop {
-            match producer.send_copy::<[u8], [u8]>(&scenario.topic, Some(count as i32 % 3), Some(content), None, (), None) {
+            match producer.send_copy::<[u8], [u8]>(&scenario.topic, Some(count as i32 % 4), Some(content), None, (), None) {
                 Err(KafkaError::MessageProduction(RDKafkaError::QueueFull)) => {
                     producer.poll(10);
                     continue;
